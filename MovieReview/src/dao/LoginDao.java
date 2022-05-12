@@ -12,7 +12,7 @@ import vo.LoginVo;
 
 public class LoginDao {
 
-
+	//아주 좋습니다. Great!
 	//스태틱객체는 무조건 하나만 만들어진다.
 	static LoginDao single = null;
 

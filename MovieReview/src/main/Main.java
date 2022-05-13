@@ -14,6 +14,9 @@ public class Main {
 	static String nickname;
 	static String ID;
 	
+	static List<LoginVo> list = null;
+	
+	
 	private static void main_login_disp() {
 
 		
@@ -59,21 +62,75 @@ public class Main {
 	private static void sign_up() {
 		
 		System.out.println("회원가입입니다.");
+		
+		//insert 하기 위한 vo 생성
+		//LoginVo vo = new LoginVo();
+		
+		//이미 있는 아이디인지 조회하기
+		list = LoginDao.getInstance().selectList();
+		
+		OUT1:
 		while(true) {
 			
+			System.out.println("회원 가입할 ID를 입력하세요.");
+			System.out.println("ID >> ");
+			String new_id = sc.nextLine();
 			
+			LoginVo vo = LoginDao.getInstance().selectOneFromID(new_id);
+			
+			if(vo!=null) {
+				System.out.println("이미 존재하는 아이디 입니다.");
+				continue OUT1;
+			}
+
+			vo = new LoginVo();
+			
+			
+			
+			System.out.println("비밀번호를 입력하세요.");
+			System.out.println("비밀번호 >> ");
+			String new_pwd = sc.nextLine();
+
+			
+			OUT2: 
+			while (true) {
+				System.out.println("닉네임을 입력하세요.");
+				System.out.println("닉네임 >> ");
+				String new_nick = sc.nextLine();
+
+				LoginVo vo2 = LoginDao.getInstance().selectOneFromNickname(new_nick);
+				
+				//vo2값이 널이 아니면 즉 테이블에 데이터가 있으면
+				if(vo2!=null) {
+					System.out.println("이미 존재하는 닉네임 입니다."); 
+					continue OUT2;
+				}
+
+				//닉네임 포장
+				vo.setNickname(new_nick);
+				break;
+
+			}
+			
+			
+			vo.setUserid(new_id);
+			vo.setPassword(new_pwd);
+			
+			int res = LoginDao.getInstance().signUp_insert(vo);
+			
+			System.out.println("회원가입 완료!!" + res);
 			
 			return;
-		}
-		
+			
+			} // while - end;
 
 	}
 
 	private static void login() {
 		System.out.println("               [로그인]");
 		System.out.println();
-
-		List<LoginVo> list = LoginDao.getInstance().selectList();
+		//조회하기 위해 Dao객체 생성
+		list = LoginDao.getInstance().selectList();
 
 			for(int i=0; i<5; i++) {
 				

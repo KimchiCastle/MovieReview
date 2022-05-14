@@ -12,14 +12,12 @@ import dbservice.movieService;
 
 public class LoginDao {
 
-	
-	//스태틱객체는 무조건 하나만 만들어진다.
+
 	static LoginDao single = null;
 
-	//스태틱은 무조건 스태틱으로만
 	public static LoginDao getInstance() {
 
-		//객체가 없으면 생성해라 호출된 한번만 객체를 생성
+		
 		if (single == null)
 			single = new LoginDao();
 
@@ -32,6 +30,8 @@ public class LoginDao {
 	}
 
 	
+	
+	//멤버 테이블 조회
 	public List<LoginVo> selectList() {
 
 		List<LoginVo> list = new ArrayList<LoginVo>();
@@ -123,8 +123,8 @@ public class LoginDao {
 				//Vo로 포장
 				vo = new LoginVo();
 				vo.setUserid(rs.getString("userid"));
-//				vo.setNickname(rs.getString("nickname"));
-//				vo.setPassword(rs.getString("password"));
+				vo.setNickname(rs.getString("nickname"));
+				vo.setPassword(rs.getString("password"));
 				
 
 			}
@@ -152,7 +152,67 @@ public class LoginDao {
 		return vo;
 	}
 	
-	//nickname 중복체크용 메소드
+	
+	//password 중복체크 메소드
+	public LoginVo passwordCheck(String userid) {
+		
+		LoginVo vo = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select password from member where userid=?";
+		
+		try {
+			//1.connection 얻어오기
+			//				 커낵션 객체생성, DB에게 커낵션얻기
+			conn = movieService.getInstance().getConnection();
+			
+			//2.PreparedStatement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, userid);
+			//3.ResultSet 얻어오기
+			
+			rs = pstmt.executeQuery();
+			
+			//4.포장(record -> Vo -> list)
+			
+			while (rs.next()) {
+				//rs가 가리키는 행(레코드)의 값을 읽어온다.
+				
+				//Vo로 포장
+				vo = new LoginVo();
+				vo.setUserid(rs.getString("userid"));
+				vo.setNickname(rs.getString("nickname"));
+				vo.setPassword(rs.getString("password"));
+				
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				//연결(생성) 되었으면 닫아라.(생성 역순으로 닫기)
+				if (rs != null)
+					rs.close(); // 3
+				if (pstmt != null)
+					pstmt.close(); // 2
+				if (conn != null)
+					conn.close(); // 1
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return vo;
+	}
+	
+	//닉네임 중복체크용 메소드
 	public LoginVo selectOneFromNickname(String nickname) {
 
 		LoginVo vo = null;

@@ -3,8 +3,8 @@ package main;
 import java.util.List;
 import java.util.Scanner;
 
-import Vo.LoginVo;
-import Dao.LoginDao;
+import dao.LoginDao;
+import vo.LoginVo;
 
 public class Main {
 

@@ -33,7 +33,7 @@ insert into movie values(22,'양들의침묵');
 
 select * from movie
 
-
+select title from movie where movieidx between 1 and 5
 
 
 */

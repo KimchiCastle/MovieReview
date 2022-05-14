@@ -1,11 +1,18 @@
 package main;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import dao.LoginDao;
+import dao.MovieDao;
+import dao.ReviewDao;
 import vo.LoginVo;
+import vo.MovieVo;
+import vo.ReviewVo;
 
 public class Main {
 
@@ -214,21 +221,31 @@ public class Main {
 	private static void main_main_disp() {
 		// TODO Auto-generated method stub
 		
-		System.out.println("\n\n¸ÞÀÎÈ­¸éÀÔ´Ï´Ù.");
-		System.out.println("¹´½ä¿¡ ¿À½Å°É È¯¿µÇÕ´Ï´Ù!!!!");
-		System.out.println("¸Þ´º¸¦ ¼±ÅÃÇÏ¼¼¿ä");
-		
-		System.out.println("[1] ¸íÀÛ¿µÈ­");
-		System.out.println("[2] Á¹ÀÛ¿µÈ­");
-		System.out.println("[3] Å³¸µÅ¸ÀÓ¿µÈ­");
-		System.out.println("[4] ¾Æ¹«°Å³ª");
-		System.out.println("[5] ¸ð½Ã²¤ÀÌ");
-		
-		System.out.printf("[6] %s ´ÔÀÌ ¾´±Û È®ÀÎÇÏ±â\n",nickname);
-		System.out.println("[7] ·Î±×¾Æ¿ô");
 		
 		
 		while(true) {
+			System.out.println("\n\n¸ÞÀÎÈ­¸éÀÔ´Ï´Ù.");
+			System.out.println("¹´½ä¿¡ ¿À½Å°É È¯¿µÇÕ´Ï´Ù!!!!");
+			System.out.println("¸Þ´º¸¦ ¼±ÅÃÇÏ¼¼¿ä");
+			
+			//¿µÈ­Å×ÀÌºíÀ» Á¶È¸ÇØ¼­ ³»¿ëÀ» 1~5±îÁöÀÇ ³»¿ëÀ» ÀÐ¾î¿Í¼­ µ¿ÀûÀ¸·Î Ãâ·ÂÇØÁÖ´Â °Å
+			//MovieVo vo = new MovieVo();
+			List<MovieVo> movie_list = new ArrayList<MovieVo>();
+			movie_list = MovieDao.getInstance().selectList();
+			
+			//Å×ÀÌºí¿¡¼­ µ¿ÀûÀ¸·Î ¿µÈ­Á¦¸ñ ÀÐ¾î¿À±â
+			for(MovieVo vo : movie_list) {
+				System.out.println("[" + vo.getMovieidx() + "] " + vo.getTitle());
+			}
+			
+			/*
+			 * System.out.println("[1] ¸íÀÛ¿µÈ­"); System.out.println("[2] Á¹ÀÛ¿µÈ­");
+			 * System.out.println("[3] Å³¸µÅ¸ÀÓ¿µÈ­"); System.out.println("[4] ¾Æ¹«°Å³ª");
+			 * System.out.println("[5] ¸ð½Ã²¤ÀÌ");
+			 */
+			
+			System.out.printf("[6] %s ´ÔÀÌ ¾´±Û È®ÀÎÇÏ±â\n",nickname);
+			System.out.println("[7] ·Î±×¾Æ¿ô");
 			
 			try {
 				int res = sc.nextInt();
@@ -240,17 +257,18 @@ public class Main {
 				}	
 				
 				switch (res) {
-				case 1: review_disp(); break;
+				case 1: review_disp(1); break;
 				
-				case 2: review_disp(); break;
+				case 2: review_disp(2); break;
 				
-				case 3: review_disp(); break;
+				case 3: review_disp(3); break;
 				
-				case 4: review_disp(); break;
+				case 4: review_disp(4); break;
 				
-				case 5: review_disp(); break;
+				case 5: review_disp(5); break;
 				
-				case 6: review_disp(); break;
+				//case 6: review_disp(6); break;
+				case 6: review_disp_user(); break;
 				
 				case 7: System.out.println("\n ·Î±×¾Æ¿ô ÇÕ´Ï´Ù.\n ÀÌ¿ëÇØ ÁÖ¼Å¼­ °¨»çÇÕ´Ï´Ù."); return; 
 				}
@@ -271,44 +289,166 @@ public class Main {
 
 		
 	}
+	
+	
+	//·Î±×ÀÎÇÑ »ç¿ëÀÚ°¡ ÀÛ¼ºÇÑ ¸®ºä Á¶È¸ÇÏ±â
+	private static void review_disp_user() {
+		// TODO Auto-generated method stub
+		
+		System.out.println(nickname + "´ÔÀÌ ÀÛ¼ºÇÑ ¸®ºä ¸ñ·ÏÀÔ´Ï´Ù.");
+		
+		String[] menu = { "±Û¹øÈ£", "¿µÈ­Á¦¸ñ", "³»¿ë", "ÀÛ¼ºÀÚ", "ÀÛ¼ºÀÏÀÚ" };
 
-	private static void review_disp() {
+		System.out.println(
+				"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+		System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1], menu[2],
+				menu[3], menu[4]);
+		System.out.println(
+				"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+
+		
+		
+		List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
+		select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
+		
+		for(ReviewVo vo : select_review_list) {
+			System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(), vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
+			System.out.println(
+					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+			
+		}
+		
+		System.out.println("1.±Û¾²±â\n2.¼öÁ¤\n3.»èÁ¦\n4.ÀÌÀü È­¸éÀ¸·Î..");
+
+		int choice = sc.nextInt();
+		sc.nextLine();
+		
+		//´Ù¸¥ ¼ýÀÚ¸¦ ÀÔ·ÂÇßÀ»¶§, ¾î¶»°Ô ÇÒÁö ¿¡·¯Ã³¸® ÇØ¾ßÇÔ
+		
+		switch(choice) {
+			case 1:	write_review(); break;
+			case 2:	update_review(); break;
+			case 3:	delete_review(); break;
+			case 5:	return;
+			
+		}
+		
+		
+	}
+	private static void delete_review() {
+		// TODO Auto-generated method stub
+		
+		//ÀÌ°÷¿¡ »èÁ¦ ¸Þ¼Òµå¸¦ ÀÛ¼ºÇØÁÖ¼¼¿ä
+	}
+	private static void update_review() {
+		// TODO Auto-generated method stub
+		
+		//ÀÌ°÷¿¡ ¼öÁ¤ ¸Þ¼Òµå¸¦ ÀÛ¼ºÇØÁÖ¼¼¿ä
+	}
+	
+	
+	
+	//¹«ºñ ¸®½ºÆ® Á¶È¸ÇÏ±â
+	private static void review_disp(int movieNo) {
 		// TODO Auto-generated method stub
 
 		while (true) {
 
-			int idx = 1;
+			int idx = 0;
 
-			String[] m = { "¿µÈ­Á¦¸ñ", "¿µÈ­ ÇÑÁÙÆòµé¾î°¥ °÷(ÃÖ´ë20ÀÚ)", "È«±æµ¿", "2022/05/11" };
+			String[] m = { "¿µÈ­Á¦¸ñ", "¿µÈ­ ÇÑÁÙÆòµé¾î°¥ °÷(ÃÖ´ë20ÀÚ)", "È«±æµ¿", "2022-05-11" };
 
 			String[] menu = { "±Û¹øÈ£", "¿µÈ­Á¦¸ñ", "³»¿ë", "ÀÛ¼ºÀÚ", "ÀÛ¼ºÀÏÀÚ" };
 
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - -");
-			System.out.printf(" %s | %8s      | %17s               | %4s   | %5s \n", menu[0], menu[1], menu[2],
+					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+			System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1], menu[2],
 					menu[3], menu[4]);
 
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - -");
+					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
 
-			System.out.printf("   %04d | %13s | %21s | %6s | %11s \n", idx, m[0], m[1], m[2], m[3]);
+			System.out.printf("   %04d | %13s    | %21s         | %6s   | %11s   |\n", idx, m[0], m[1], m[2], m[3]);
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - -");
+					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
 
+			//ÀÎÀÚ·Î ¹ÞÀº ¹«ºñ³Ñ¹ö¿Í °°Àº ¸®ºä ·¹ÄÚµå Á¶È¸ÇÏ±â 
+			String movieTitle= MovieDao.getInstance().selectMovieTitle(movieNo);
+			
+			
+			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
+			select_review_list = ReviewDao.getInstance().selectList(movieTitle);
+			
+			for(ReviewVo vo : select_review_list) {
+				System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(), vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
+				System.out.println(
+						"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+				
+			}
+			
 			System.out.println("1.±Û¾²±â\n2.¼öÁ¤\n3.»èÁ¦\n4.³»°¡ ¾´±Û È®ÀÎ\n5.ÀÌÀü È­¸éÀ¸·Î..");
 
 			int choice = sc.nextInt();
-
-			if (choice == 5) {
-				return;
+			sc.nextLine();
+			
+			switch(choice) {
+				case 1:	write_review(); break;
+				case 2:	update_review(); break;
+				case 3:	delete_review(); break;
+				case 4:	review_disp_user(); break;
+				case 5:	return;
+				
 			}
+			
 
 		} // Ãâ·ÂÈ­¸é while - end
 		
 		
 
 	}
-
+	
+	
+	//¸®ºä ÀÛ¼ºÇØ¼­ »ðÀÔÇÏ´Â ºÎºÐ
+	private static void write_review() {
+		// TODO Auto-generated method stub
+		String title;
+		String geulText;
+		String userId = ID;
+		String geulDate;
+		int movieNo;
+		
+		//ÇöÀç ³¯Â¥ ±¸ÇÏ±â
+		LocalDate now = LocalDate.now();
+		//Æ÷¸ËÀû¿ëÇØ¼­ ¿øÇÏ´Â ³¯Â¥¸¸ °¡Á®¿À±â
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		
+		geulDate = now.format(formatter);
+		
+		
+		
+		System.out.print("ÀÛ¼ºÀ» ¿øÇÏ´Â ¿µÈ­ Á¦¸ñÀ» ÀÔ·ÂÇÏ¼¼¿ä >> ");
+		title = sc.nextLine();
+		//System.out.println(title);
+		movieNo = MovieDao.getInstance().selectMovieNo(title);
+		
+		System.out.print("\n¿µÈ­¿¡ ´ëÇÑ ¸®ºä¸¦ ÀÛ¼ºÇØÁÖ¼¼¿ä.´Ü, ±ÛÀÚ¼ö´Â 20ÀÚ¸¦ ³ÑÀ» ¼ö ¾ø½À´Ï´Ù.");
+		geulText = sc.nextLine();
+		
+		ReviewVo vo = new ReviewVo(movieNo, geulText, userId, geulDate);
+		
+		int res = ReviewDao.getInstance().insert_review(vo);
+		
+		if(res == 0) {
+			System.out.println("±Û ¾²±â ½ÇÆÐ!");
+		} else {
+			System.out.println("±Û ¾²±â ¼º°ø!");
+		}
+		
+		//System.out.println(movieNo);
+		//System.out.println(geulDate);
+		
+		
+	}
 	//¾ÆÀÌµð °Ë»ç ¸Þ¼Òµå ÇÑ±¹¾î¿Í ¶ç¾î¾²±â°¡ µé¾î¿ÔÀ¸¸é
 	public static boolean isKorean(String str) {
 		return Pattern.matches(".*[¤¡-¤¾¤¿-¤Ó°¡-ÆR!?()\s]+.*", str.replace("\n", ""));

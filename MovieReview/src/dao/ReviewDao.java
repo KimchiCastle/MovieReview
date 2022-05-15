@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import service.movieService;
-import vo.ReviewVo;
+import Vo.ReviewVo;
+import dbService.movieService;
 
 public class ReviewDao {
 	//single-ton : 객체 1개만 생성해서 사용하자
@@ -20,6 +20,7 @@ public class ReviewDao {
 		if (single == null) {
 			single = new ReviewDao();
 		}
+		
 		//이전에 만들어 놨던 객체를 그대로 반환한다.
 		return single;
 	}
@@ -188,4 +189,150 @@ public class ReviewDao {
 		
 		return res;
 	}
+	
+	public int update_review(ReviewVo vo) {
+	
+		int res = 0;
+		
+		Connection        conn  = null;
+		PreparedStatement pstmt = null;
+		//                                 
+		String  sql = "update review set geultext=?, geuldate=? where geulno=?";
+		
+		try {
+			//1.Connection얻어오기
+			conn = movieService.getInstance().getConnection();
+			
+			//2.PreparedStatement얻어오기
+			pstmt = conn.prepareStatement(sql);
+			
+			//3.pstmt parameter 설정
+			pstmt.setString(1, vo.getGeultext());
+			pstmt.setString(2, vo.getGeulDate());
+			pstmt.setInt(3, vo.getGeulno());
+		
+			//3.DML(insert/update/delete) : res<-처리된 행수반환
+			res = pstmt.executeUpdate();
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			
+			try {
+				//닫기(열린역순)
+				if(pstmt!=null) pstmt.close();//2
+				if(conn!=null)  conn.close(); //1
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return res;
+	}
+
+	public int delete_review(int geulno) {
+		
+		int res = 0; //성공하면 1, 실패하면 0
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;					
+		String sql = "delete from review where geulno=?";
+		
+		try {
+			//1.connection얻어오기
+			conn = movieService.getInstance().getConnection();
+			
+			//2.prepared statement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+			
+			//3.pstmt parameter 설정
+			pstmt.setInt(1, geulno); //첫 인덱스 설정
+			
+			//4.DML(insert/update/delete)
+			res = pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace(); //에러내용확인
+		}finally {
+			
+			try {
+				if(pstmt!=null)pstmt.close();
+				if(conn!=null)conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return res;
+		
+	}
+	
+	public List<ReviewVo> selectList_UserOnly(int geulno) {
+		
+		List<ReviewVo> list = new ArrayList<ReviewVo>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select nickname from review_view where geulno = ?";
+		
+		try {
+			//1. connection 얻어오기
+			conn = movieService.getInstance().getConnection();
+			
+			//2. PreparedStatement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, geulno);
+			
+			//3. ResultSet 얻어오기 
+			rs = pstmt.executeQuery();
+			
+			//4. 포장
+			while (rs.next()) {
+				//rs가 가리키는 행(레코드)의 값을 읽어 온다.
+				
+				//geulno로 메인에서 받아와서 sql에 부합하는 nickname을 vo로 포장해서 data에 전달
+				ReviewVo vo = new ReviewVo();
+				//vo.setGeulno(rs.getInt("geulno"));
+//				vo.setTitle(rs.getString("title"));
+//				vo.setGeultext(rs.getString("geultext"));
+				vo.setNickname(rs.getString("nickname"));
+//				vo.setGeulDate(rs.getString("geuldate"));
+				
+				//list에 추가 
+				list.add(vo);
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();//
+		} finally {//반드시 실행하는 구문
+			
+			try {
+				
+				//연결되어 있는 상태면 끊어라.(생성 역순으로)
+				
+				if (rs != null)
+					rs.close(); //3
+				if (pstmt != null)
+					pstmt.close();//2
+				if (conn != null)
+					conn.close();//1
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return list;
+	}
+	
+	
+	
+	
+	
+	
 }

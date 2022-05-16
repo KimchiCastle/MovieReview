@@ -1,4 +1,4 @@
-package mymain;
+package main;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-import HHHHH.LoginDao;
-import HHHHH.MovieDao;
-import HHHHH.ReviewDao;
-import Vo.CategoryVo;
-import Vo.LoginVo;
-import Vo.MovieVo;
-import Vo.ReviewVo;
+import dao.LoginDao;
+import dao.MovieDao;
+import dao.ReviewDao;
+import vo.CategoryVo;
+import vo.LoginVo;
+import vo.MovieVo;
+import vo.ReviewVo;
 
 public class Main {
 

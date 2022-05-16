@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Vo.LoginVo;
-import dbService.movieService;
+import service.movieService;
+import vo.LoginVo;
 
 public class LoginDao {
 

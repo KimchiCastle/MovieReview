@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Vo.ReviewVo;
-import dbService.movieService;
+import service.movieService;
+import vo.ReviewVo;
 
 public class ReviewDao {
 	//single-ton : 객체 1개만 생성해서 사용하자

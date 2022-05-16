@@ -7,49 +7,31 @@ create table review
 	geuldate date 
 )
 
+update review set geultext='1', geuldate= SYSDATE where geulno=1
+
 --±‚∫ª≈∞
 alter table review 
 add constraint pk_geulno primary key(geulno)
 
---ø‹∑°≈∞
-alter table review 
-add constraint fk_review_movie foreign key(movieidx) references Movie(movieidx)
+alter table review add constraint fk_userid foreign key(userid) references member(userid)	
+alter table review add constraint fk_movieidx foreign key(movieidx) references movie(movieidx)	
 
-alter table review 
-add constraint fk_review_member foreign key(userid) references member(userid)
+alter table review drop constraint fk_movieidx 
+
+update review set geultext="¡¯Ω…¿Œª˝øµ»≠", geuldate=
+
+
 
 select * from review
 
 
+
+drop table review 
 --sample data
-insert into review values( (select nvl(max(geulno)+1,1) from review) , 1,  'æ»≥Á«œººø‰', '±Êµø1', '2022-05-11' );   
-insert into review values( (select nvl(max(geulno)+1,1) from review) , 5,  '¿ÁπÃ¿÷≥◊ø‰', '±Êµø2', '2022-05-09' );   
-insert into review values( (select nvl(max(geulno)+1,1) from review) , 10, '¿π «Ÿ≥Î¿Î',  '±Êµø3', '2022-05-27' );   
-insert into review values( (select nvl(max(geulno)+1,1) from review) , 23, 'µ∑æ∆±Óøˆº≠ ∫Ω', '±Êµø4', '2022-05-13' );  
-insert into review values( (select nvl(max(geulno)+1,1) from review) , 28, '¡π∑¡º≠ ¿·', '±Êµø5', '2022-05-12' );  
-
---data update
-update review set userid = 'id1' where geulno = 1;
-update review set userid = 'my123' where geulno = 2;
-update review set userid = 'kimchi12' where geulno = 3;
-update review set userid = 'bonglove' where geulno = 4;
-update review set userid = 'gogo0325' where geulno = 5;
-update review set movieidx = 13 where geulno = 4;
-update review set movieidx = 19 where geulno = 5;
-
-
---¡∂»∏ ∫‰
-
-create or replace view review_view
-as
-select 
-geulno, title, geultext, nickname, geuldate 
-from review r 
-left outer join member m2 on r.userid = m2.userid
-left outer join movie m on r.movieidx = m.movieidx
-
-select * from review_view
-
-
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 1,  'æ»≥Á«œººø‰', 'id1', '2022-05-11' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 5,  '¿ÁπÃ¿÷≥◊ø‰', 'my123', '2022-05-09' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 10, '¿π «Ÿ≥Î¿Î',  'bonglove', '2022-05-27' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 20, 'µ∑æ∆±Óøˆº≠ ∫Ω', 'kimchi12', '2022-05-13' );  
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 21, '¡π∑¡º≠ ¿·', 'gogo0325', '2022-05-12' );   
 
 

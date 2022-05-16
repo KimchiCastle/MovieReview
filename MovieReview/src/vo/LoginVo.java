@@ -1,5 +1,4 @@
-package vo;
-
+package Vo;
 
 public class LoginVo {
 

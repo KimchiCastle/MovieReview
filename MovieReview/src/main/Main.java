@@ -219,7 +219,7 @@ public class Main {
 
 		while (true) {
 
-			System.out.println("공사중인 메인화면");
+			System.out.println("메인화면");
 			System.out.println("뭅썰에 오신것을 환영합니다.");
 			System.out.println("영화장르를 선택하세요.");
 
@@ -232,13 +232,14 @@ public class Main {
 			}
 
 			System.out.println("[7] 내가 쓴 글 보러가기.");
-			System.out.println("[8] 로그아웃");
+			System.out.println("[8] 전체 리뷰 조회하기");
+			System.out.println("[9] 로그아웃");
 
 			try {
 				int choice = sc.nextInt();
 				sc.nextLine();
 
-				if (choice >= 9) {
+				if (choice >= 10) {
 					System.out.println("잘못 입력되었습니다.");
 					continue;
 
@@ -265,7 +266,12 @@ public class Main {
 					break;
 				case 7:
 					review_disp_user();
+					break;
 				case 8:
+					//전체 리뷰 테이블 조회
+					review_all();
+					break;
+				case 9:
 					return;
 				}
 
@@ -280,13 +286,39 @@ public class Main {
 
 	}
 
+	private static void review_all() {
+		// TODO Auto-generated method stub
+		
+		String[] menu = { "글번호", "영화제목", "내용", "작성자", "작성일자" };
+
+		
+		System.out.println(
+				"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
+		System.out.printf("| %6s | %-16s\t  | %-32s\t\t | %-8s\t | %-12s|\n", menu[0], menu[1],
+				menu[2], menu[3], menu[4]);
+		System.out.println(
+				"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
+
+		List<ReviewVo> all_list = new ArrayList<ReviewVo>();
+		all_list = ReviewDao.getInstance().selectList_All();
+
+		for (ReviewVo vo : all_list) {
+			System.out.printf("| %7d | %-16s\t  | %-32s\t\t | %-8s\t | %-12s |\n", vo.getGeulno(),
+					vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
+			System.out.println(
+					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
+
+		}
+	}
+
 	// 카테고리의 영화 디스플레이
 	private static void main_main_disp(int cateno) {
 		// TODO Auto-generated method stub
-		OUT: while (true) {
+		while (true) {
 			// System.out.println("메인화면입니다.");
 			// System.out.println("뭅썰에 오신걸 환영합니다!!!!");
 			System.out.println("영화를 선택하세요");
+			System.out.println("이전 화면으로 돌아가시려면 'n'을 입력하세요.");
 
 			// 영화테이블을 조회해서 내용을 1~5까지의 내용을 읽어와서 동적으로 출력해주는 거
 			// MovieVo vo = new MovieVo();
@@ -299,19 +331,24 @@ public class Main {
 			// 테이블에서 동적으로 영화제목 읽어오기
 			for (MovieVo vo : movie_list) {
 
-				System.out.println(vo.getTitle());
+				System.out.println("["+ vo.getTitle() + "]");
 				movie_list2.add(vo.getTitle());
 		
 			}
+			
+			//★★★★★★★★잘못 입력한 경우와 나가는 경우를 구분해서 구현★★★★★★
+			
 			
 			String res = sc.nextLine();
 
 				if (movie_list2.contains(res)) {
 					review_disp(res);
+				} else if(res.equalsIgnoreCase("n")){
+					return;
 				} else {
 		
-					System.out.println("장르에 포함되지 않은 영화입니다");
-					break;
+					System.out.println("장르에 포함되지 않은 영화입니다, 다시 입력해주세요.");
+					continue;
 				}
 			
 				
@@ -406,50 +443,48 @@ public class Main {
 			System.out.println(nickname + "님이 작성한 리뷰 목록입니다.");
 
 			String[] menu = { "글번호", "영화제목", "내용", "작성자", "작성일자" };
-
+			
+			
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
-			System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1],
+					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
+			System.out.printf("| %6s | %-16s\t  | %-32s\t\t | %-8s\t | %-12s|\n", menu[0], menu[1],
 					menu[2], menu[3], menu[4]);
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
 
 			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
 			select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
 
+
 			for (ReviewVo vo : select_review_list) {
-				System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(),
+				System.out.printf("| %7d | %-16s\t  | %-32s\t\t | %-8s\t | %-12s |\n", vo.getGeulno(),
 						vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
 				System.out.println(
-						"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+						"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
 
 			}
 
-			System.out.println("1.글쓰기\n2.수정\n3.삭제\n4.이전 화면으로..");
+			System.out.println("1.수정\n2.삭제\n3.이전 화면으로..");
 
 			// 다른 숫자를 입력했을때, 어떻게 할지 에러처리 해야함
 			try {
 				int choice = sc.nextInt();
 				sc.nextLine();
 
-				if (choice >= 5) {
+				if (choice >= 4) {
 					System.out.println("잘못 입력되었습니다.");
 					continue;
 				}
 
 				switch (choice) {
 				case 1:
-					write_review();
-					break;
-				case 2:
 					update_review();
 					break;
-				case 3:
+				case 2:
 					delete_review();
 					break;
-				case 4:
+				case 3:
 					return;
-
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -644,31 +679,25 @@ public class Main {
 
 		while (true) {
 
-			int idx = 0;
-
-			// String[] m = { "영화제목", "영화 한줄평들어갈 곳(최대20자)", "홍길동", "2022-05-11" };
-
 			String[] menu = { "글번호", "영화제목", "내용", "작성자", "작성일자" };
-
+			
+			
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
-			System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1],
+					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
+			System.out.printf("| %6s | %-16s\t  | %-32s\t\t | %-8s\t | %-12s|\n", menu[0], menu[1],
 					menu[2], menu[3], menu[4]);
-
 			System.out.println(
-					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
-
-			// 인자로 받은 영화제목(title)과 같은 리뷰 레코드 조회하기
-			// String title2 = ReviewDao.getInstance().selectList(title);
+					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
 
 			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
-			select_review_list = ReviewDao.getInstance().selectList(title);
+			select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
+
 
 			for (ReviewVo vo : select_review_list) {
-				System.out.printf("   %04d | %13s     | %21s         | %10s   | %13s   |\n", vo.getGeulno(),
+				System.out.printf("| %7d | %-16s\t  | %-32s\t\t | %-8s\t | %-12s |\n", vo.getGeulno(),
 						vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
 				System.out.println(
-						"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+						"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
 
 			}
 
@@ -686,7 +715,8 @@ public class Main {
 
 				switch (choice) {
 				case 1:
-					write_review();
+					//write_my_review();
+					write_review(title);
 					break;
 				case 2:
 					update_onlymine();
@@ -713,43 +743,40 @@ public class Main {
 
 	}
 
-	// 리뷰 작성해서 삽입하는 부분
-	private static void write_review() {
+	
+	// 장르를 선택하고 영화를 고른 후에 리뷰 작성해서 삽입하는 부분
+	private static void write_review(String movietitle) {
 		// TODO Auto-generated method stub
 		String title;
 		String geulText;
 		String userId = ID;
 		String geulDate;
 		int movieNo;
-
+		
 		// 현재 날짜 구하기
 		LocalDate now = LocalDate.now();
 		// 포맷적용해서 원하는 날짜만 가져오기
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-
+		
 		geulDate = now.format(formatter);
-
-		System.out.println("작성을 원하는 영화 제목을 입력하세요 >> ");
-		title = sc.nextLine();
-		// System.out.println(title);
+		
+		title = movietitle;
 		movieNo = MovieDao.getInstance().selectMovieNo(title);
-
+		
 		System.out.print("\n영화에 대한 리뷰를 작성해주세요.단, 글자수는 20자를 넘을 수 없습니다.");
 		geulText = sc.nextLine();
-
+		
 		ReviewVo vo = new ReviewVo(movieNo, geulText, userId, geulDate);
-
+		
 		int res = ReviewDao.getInstance().insert_review(vo);
-
+		
 		if (res == 0) {
 			System.out.println("글 쓰기 실패!");
 		} else {
 			System.out.println("글 쓰기 성공!");
 		}
-
-		// System.out.println(movieNo);
-		// System.out.println(geulDate);
-
+		
+		
 	}
 
 	// 아이디 검사 메소드 한국어와 띄어쓰기가 들어왔으면

@@ -30,6 +30,69 @@ public class ReviewDao {
 		// TODO Auto-generated constructor stub
 	}
 	
+	//전체 리뷰테이블 조회
+	public List<ReviewVo> selectList_All() {
+
+		List<ReviewVo> list = new ArrayList<ReviewVo>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from review_view";
+
+		try {
+			//1. connection 얻어오기
+			conn = movieService.getInstance().getConnection();
+
+			//2. PreparedStatement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+
+			//3. ResultSet 얻어오기 
+			rs = pstmt.executeQuery();
+
+			//4. 포장
+			while (rs.next()) {
+				//rs가 가리키는 행(레코드)의 값을 읽어 온다.
+				
+				
+				//Vo로 포장(반복을 1회 돌아서 새로운 데이터를 읽을 때마다 이 레코드를 저장할 vo를 만들어서 포장해햐 한다.)
+				ReviewVo vo = new ReviewVo();
+				vo.setGeulno(rs.getInt("geulno"));
+				vo.setTitle(rs.getString("title"));
+				vo.setGeultext(rs.getString("geultext"));
+				vo.setNickname(rs.getString("nickname"));
+				vo.setGeulDate(rs.getString("geuldate"));
+				
+				//list에 추가 
+				list.add(vo);
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();//
+		} finally {//반드시 실행하는 구문
+
+			try {
+
+				//연결되어 있는 상태면 끊어라.(생성 역순으로)
+
+				if (rs != null)
+					rs.close(); //3
+				if (pstmt != null)
+					pstmt.close();//2
+				if (conn != null)
+					conn.close();//1
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+	
+	
 	//영화제목을 인자로 받아서 리뷰테이블 조회하기 
 	public List<ReviewVo> selectList_UserOnly(String nickname) {
 		

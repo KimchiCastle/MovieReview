@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import HHHHH.LoginDao;
+import HHHHH.MovieDao;
+import HHHHH.ReviewDao;
+import Vo.CategoryVo;
 import Vo.LoginVo;
 import Vo.MovieVo;
 import Vo.ReviewVo;
-import dao.LoginDao;
-import dao.MovieDao;
-import dao.ReviewDao;
 
 public class Main {
 
@@ -75,12 +76,20 @@ public class Main {
 
 		OUT1: while (true) {
 
+			System.out.println("회원가입을 그만 두시려면 Y를, 계속 진행하시려면 아무키를 누르세요.");
+			String yn = sc.nextLine();
+
+			if (yn.equalsIgnoreCase("Y")) {
+				return;
+			}
+
 			System.out.println("\n회원 가입할 ID를 입력하세요.");
 			System.out.print("ID >> ");
 			String new_id = sc.nextLine();
 
 			if (isKorean(new_id)) {
 				System.out.println("\nID입력시 한글, 공백은 입력이 불가능합니다.");
+				System.out.println();
 				continue OUT1;
 			}
 
@@ -149,32 +158,35 @@ public class Main {
 
 		for (int i = 0; i < 5; i++) {
 
-			System.out.print("아이디 : \n");
+			System.out.print("아이디 : ");
 			String id_check = sc.nextLine();
 
-			System.out.print("비밀번호 : \n");
+			System.out.print("비밀번호 : ");
 			String pwd_check = sc.nextLine();
 
-			/*
-			 * 아이디 비번 닉네임 'id1', '123123' '박평식의5점' 'my123',, '1q2w3e4r' '우주명작7광구'
-			 * 'bonglove','bong123' '봉준호사랑해' 'kimchi12' 'kimchi12' 'kimchi12' 'gogo0325'
-			 * '123123' '영화학살자'
-			 */
+			System.out.println();
+
+//			  아이디 비번 닉네임 
+//			  'id1'      '123123'   '박평식의5점' 
+//			  'my123',   '1q2w3e4r' '우주명작7광구'
+//			  'bonglove' 'bong123'  '봉준호사랑해' 
+//			  'kimchi12' 'kimchi12' 'kimchi12' 
+//			  'gogo0325' '123123'   '영화학살자'
 
 			for (LoginVo a : list) {
 				// 아이디 체크
 				if (id_check.equals(a.getUserid())) {
 					// 비번체크
 					if (pwd_check.equals(a.getPassword())) {
-						System.out.println("\n로그인 완료");
+						System.out.println("\n로그인 완료...!!");
 						System.out.println();
 
 						nickname = a.getNickname();
 						ID = a.getUserid();
 
-						System.out.printf("\n%s 님 환영합니다!! \n\n", nickname);
+						System.out.printf("%s 님 환영합니다!! \n", nickname);
 
-						main_main_disp();
+						main_main1_1_disp();
 
 						// 메인종료되면 리턴해서 호출한 곳으로
 						return;
@@ -201,169 +213,325 @@ public class Main {
 
 	}
 
-	private static void main_main_disp() {
+	// 카테고리 디스플레이
+	private static void main_main1_1_disp() {
 		// TODO Auto-generated method stub
 
 		while (true) {
-			System.out.println("\n\n메인화면입니다.");
-			System.out.println("뭅썰에 오신걸 환영합니다!!!!");
-			System.out.println("메뉴를 선택하세요");
 
-			// 영화테이블을 조회해서 내용을 1~5까지의 내용을 읽어와서 동적으로 출력해주는 거
-			// MovieVo vo = new MovieVo();
-			List<MovieVo> movie_list = new ArrayList<MovieVo>();
-			movie_list = MovieDao.getInstance().selectList();
+			System.out.println("공사중인 메인화면");
+			System.out.println("뭅썰에 오신것을 환영합니다.");
+			System.out.println("영화장르를 선택하세요.");
 
-			// 테이블에서 동적으로 영화제목 읽어오기
-			for (MovieVo vo : movie_list) {
-				System.out.println("[" + vo.getMovieidx() + "] " + vo.getTitle());
+			List<CategoryVo> list = MovieDao.getInstance().select_Category_List();
+
+			for (CategoryVo vo : list) {
+
+				System.out.println("[" + vo.getCateno() + "] " + vo.getCatename());
+
 			}
 
-			/*
-			 * System.out.println("[1] 명작영화"); System.out.println("[2] 졸작영화");
-			 * System.out.println("[3] 킬링타임영화"); System.out.println("[4] 아무거나");
-			 * System.out.println("[5] 모시깽이");
-			 */
-
-			System.out.printf("[6] %s 님이 쓴글 확인하기\n", nickname);
-			System.out.println("[7] 로그아웃");
+			System.out.println("[7] 내가 쓴 글 보러가기.");
+			System.out.println("[8] 로그아웃");
 
 			try {
-				int res = sc.nextInt();
+				int choice = sc.nextInt();
+				sc.nextLine();
 
-				sc.nextLine(); // 입력구분자제거
-				if (res >= 8) {
+				if (choice >= 9) {
 					System.out.println("잘못 입력되었습니다.");
 					continue;
+
 				}
 
-				switch (res) {
+				switch (choice) {
 				case 1:
-					review_disp(1);
+					main_main_disp(1);
 					break;
-
 				case 2:
-					review_disp(2);
+					main_main_disp(2);
 					break;
-
 				case 3:
-					review_disp(3);
+					main_main_disp(3);
 					break;
-
 				case 4:
-					review_disp(4);
+					main_main_disp(4);
 					break;
-
 				case 5:
-					review_disp(5);
+					main_main_disp(5);
 					break;
-
-				// case 6: review_disp(6); break;
 				case 6:
-					review_disp_user();
+					main_main_disp(6);
 					break;
-
 				case 7:
-					System.out.println("\n 로그아웃 합니다.\n 이용해 주셔서 감사합니다.");
+					review_disp_user();
+				case 8:
 					return;
 				}
 
 			} catch (Exception e) {
-				System.out.println("잘못 입력되었습니다.");
+				// TODO: handle exception
+				System.out.println("잘못된 입력입니다.");
 				sc = new Scanner(System.in);
+
 			}
+
+		} // while - end
+
+	}
+
+	// 카테고리의 영화 디스플레이
+	private static void main_main_disp(int cateno) {
+		// TODO Auto-generated method stub
+		OUT: while (true) {
+			// System.out.println("메인화면입니다.");
+			// System.out.println("뭅썰에 오신걸 환영합니다!!!!");
+			System.out.println("영화를 선택하세요");
+
+			// 영화테이블을 조회해서 내용을 1~5까지의 내용을 읽어와서 동적으로 출력해주는 거
+			// MovieVo vo = new MovieVo();
+			List<MovieVo> movie_list = new ArrayList<MovieVo>();
+			List<String> movie_list2 = new ArrayList<>();
+			movie_list = MovieDao.getInstance().selectList(cateno);
+			
+
+			
+			// 테이블에서 동적으로 영화제목 읽어오기
+			for (MovieVo vo : movie_list) {
+
+				System.out.println(vo.getTitle());
+				movie_list2.add(vo.getTitle());
+		
+			}
+			
+			String res = sc.nextLine();
+
+				if (movie_list2.contains(res)) {
+					review_disp(res);
+				} else {
+		
+					System.out.println("장르에 포함되지 않은 영화입니다");
+					break;
+				}
+			
+				
+			
 
 		}
 
 	}
+
+//	private static void main_main_disp() {
+//		// TODO Auto-generated method stub
+//
+//		while (true) {
+//			System.out.println("메인화면입니다.");
+//			System.out.println("뭅썰에 오신걸 환영합니다!!!!");
+//			System.out.println("메뉴를 선택하세요");
+//
+//			// 영화테이블을 조회해서 내용을 1~5까지의 내용을 읽어와서 동적으로 출력해주는 거
+//			// MovieVo vo = new MovieVo();
+//			List<MovieVo> movie_list = new ArrayList<MovieVo>();
+//			movie_list = MovieDao.getInstance().selectList();
+//
+//			// 테이블에서 동적으로 영화제목 읽어오기
+//			for (MovieVo vo : movie_list) {
+//				System.out.println("[" + vo.getMovieidx() + "] " + vo.getTitle());
+//			}
+//
+//			/*
+//			 * System.out.println("[1] 명작영화"); System.out.println("[2] 졸작영화");
+//			 * System.out.println("[3] 킬링타임영화"); System.out.println("[4] 아무거나");
+//			 * System.out.println("[5] 모시깽이");
+//			 */
+//
+//			System.out.printf("[6] %s 님이 쓴글 확인하기\n", nickname);
+//			System.out.println("[7] 로그아웃");
+//
+//			try {
+//				int res = sc.nextInt();
+//
+//				sc.nextLine(); // 입력구분자제거
+//				if (res >= 8) {
+//					System.out.println("잘못 입력되었습니다.");
+//					continue;
+//				}
+//
+//				switch (res) {
+//				case 1:
+//					review_disp(1);
+//					break;
+//
+//				case 2:
+//					review_disp(2);
+//					break;
+//
+//				case 3:
+//					review_disp(3);
+//					break;
+//
+//				case 4:
+//					review_disp(4);
+//					break;
+//
+//				case 5:
+//					review_disp(5);
+//					break;
+//
+//				// case 6: review_disp(6); break;
+//				case 6:
+//					review_disp_user();
+//					break;
+//
+//				case 7:
+//					System.out.println("\n 로그아웃 합니다.\n 이용해 주셔서 감사합니다.");
+//					return;
+//				}
+//
+//			} catch (Exception e) {
+//				System.out.println("잘못 입력되었습니다.");
+//				sc = new Scanner(System.in);
+//			}
+//
+//		}
+//
+//	}
 
 	// 로그인한 사용자가 작성한 리뷰 조회하기
 	private static void review_disp_user() {
 		// TODO Auto-generated method stub
 
-		System.out.println(nickname + "님이 작성한 리뷰 목록입니다.");
+		while (true) {
 
-		String[] menu = { "글번호", "영화제목", "내용", "작성자", "작성일자" };
+			System.out.println(nickname + "님이 작성한 리뷰 목록입니다.");
 
-		System.out.println(
-				"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
-		System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1],
-				menu[2], menu[3], menu[4]);
-		System.out.println(
-				"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+			String[] menu = { "글번호", "영화제목", "내용", "작성자", "작성일자" };
 
-		List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
-		select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
-
-		for (ReviewVo vo : select_review_list) {
-			System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(), vo.getTitle(),
-					vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
+			System.out.println(
+					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
+			System.out.printf("   %s | %8s         | %17s                 | %4s     | %5s       |\n", menu[0], menu[1],
+					menu[2], menu[3], menu[4]);
 			System.out.println(
 					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
 
-		}
+			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
+			select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
 
-		System.out.println("1.글쓰기\n2.수정\n3.삭제\n4.이전 화면으로..");
+			for (ReviewVo vo : select_review_list) {
+				System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(),
+						vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
+				System.out.println(
+						"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
 
-		int choice = sc.nextInt();
-		sc.nextLine();
+			}
 
-		// 다른 숫자를 입력했을때, 어떻게 할지 에러처리 해야함
+			System.out.println("1.글쓰기\n2.수정\n3.삭제\n4.이전 화면으로..");
 
-		switch (choice) {
-		case 1:
-			write_review();
-			break;
-		case 2:
-			update_review();
-			break;
-		case 3:
-			delete_review();
-			break;
-		case 5:
-			return;
+			// 다른 숫자를 입력했을때, 어떻게 할지 에러처리 해야함
+			try {
+				int choice = sc.nextInt();
+				sc.nextLine();
 
-		}
+				if (choice >= 5) {
+					System.out.println("잘못 입력되었습니다.");
+					continue;
+				}
+
+				switch (choice) {
+				case 1:
+					write_review();
+					break;
+				case 2:
+					update_review();
+					break;
+				case 3:
+					delete_review();
+					break;
+				case 4:
+					return;
+
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("잘못 입력하였습니다.");
+				sc = new Scanner(System.in);
+				continue;
+			} // catch
+
+		} // while - end
 
 	}
 
 	// 메인에서 내 리뷰만 보일때 메소드
 	private static void delete_review() {
-		System.out.println("삭제할 리뷰의 번호를 입력하세요");
 
-		int geulno = sc.nextInt();
-		int res = ReviewDao.getInstance().delete_review(geulno);
+		while (true) {
 
-		System.out.println("리뷰가 삭제되었습니다.");
+			System.out.println("삭제할 리뷰의 번호를 입력하세요");
+
+			try {
+
+				int geulno = sc.nextInt();
+				int res = ReviewDao.getInstance().delete_review(geulno);
+
+				System.out.println("리뷰가 삭제되었습니다.");
+
+				return;
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("글번호만 입력해 주세요.");
+				sc = new Scanner(System.in);
+				continue;
+			}
+
+		} // while - end
+
 	}
 
 	// 내 리뷰만 보일때 메소드
 	private static void update_review() {
 
-		System.out.println("수정할 리뷰의 번호를 입력하세요");
-		int geulno = sc.nextInt();
-		sc.nextLine();
-		System.out.println("수정할 리뷰를 한줄이내 입력하세요");
-		String geultext = sc.nextLine();
-		// 현재 날짜 구하기
-		LocalDate now = LocalDate.now();
-		// 포맷적용해서 원하는 날짜만 가져오기
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		while (true) {
 
-		String geulDate = now.format(formatter);
+			System.out.println("수정할 리뷰의 글번호를 입력하세요");
 
-		ReviewVo vo = new ReviewVo();
+			try {
 
-		vo.setGeultext(geultext);
-		vo.setGeulDate(geulDate);
-		vo.setGeulno(geulno);
+				int geulno = sc.nextInt();
+				sc.nextLine();
 
-		ReviewDao.getInstance().update_review(vo);
+				System.out.println("수정할 리뷰를 한줄이내 입력하세요");
+				String geultext = sc.nextLine();
+				// 현재 날짜 구하기
+				LocalDate now = LocalDate.now();
+				// 포맷적용해서 원하는 날짜만 가져오기
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-		System.out.println("리뷰 수정이 완료됐습니다.");
-		System.out.println();
+				String geulDate = now.format(formatter);
 
-		return;
+				ReviewVo vo = new ReviewVo();
+
+				vo.setGeultext(geultext);
+				vo.setGeulDate(geulDate);
+				vo.setGeulno(geulno);
+
+				ReviewDao.getInstance().update_review(vo);
+
+				System.out.println("리뷰 수정이 완료됐습니다.");
+				System.out.println();
+
+				return;
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("글번호만 입력해 주세요.");
+				sc = new Scanner(System.in);
+				continue;
+
+			}
+
+		} // while - end
 
 	}
 
@@ -373,45 +541,59 @@ public class Main {
 		OUT: while (true) {
 
 			System.out.println("수정할 리뷰의 글번호를 입력하세요");
-			int geulno = sc.nextInt();
-			sc.nextLine();
 
-			List<ReviewVo> list = ReviewDao.getInstance().selectList_UserOnly(geulno);
+			try {
 
-			for (ReviewVo a : list) {
-				// 아이디 체크
-				if (nickname.equals(a.getNickname())) {
+				int geulno = sc.nextInt();
+				sc.nextLine();
 
-					System.out.println("수정할 리뷰를 한줄이내 입력하세요");
-					String geultext = sc.nextLine();
-					// 현재 날짜 구하기
-					LocalDate now = LocalDate.now();
-					// 포맷적용해서 원하는 날짜만 가져오기
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+				List<ReviewVo> list = ReviewDao.getInstance().selectList_UserOnly(geulno);
 
-					String geulDate = now.format(formatter);
+				for (ReviewVo a : list) {
 
-					ReviewVo vo = new ReviewVo();
+					// 아이디 체크
+					if (nickname.equals(a.getNickname())) {
 
-					vo.setGeulno(geulno);
-					vo.setGeultext(geultext);
-					vo.setGeulDate(geulDate);
+						System.out.println("수정할 리뷰를 한줄이내 입력하세요");
+						String geultext = sc.nextLine();
+						// 현재 날짜 구하기
+						LocalDate now = LocalDate.now();
+						// 포맷적용해서 원하는 날짜만 가져오기
+						DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-					int res = ReviewDao.getInstance().update_review(vo);
+						String geulDate = now.format(formatter);
 
-					System.out.println("리뷰 수정이 완료됐습니다." + res);
-					System.out.println();
-					break;
-					
-				} else {
-					System.out.println("본인이 작성한 글이 아닙니다.");
-					continue OUT;
+						ReviewVo vo = new ReviewVo();
+
+						vo.setGeulno(geulno);
+						vo.setGeultext(geultext);
+						vo.setGeulDate(geulDate);
+
+						int res = ReviewDao.getInstance().update_review(vo);
+
+						System.out.println("리뷰 수정이 완료됐습니다." + res);
+						System.out.println();
+						break;
+
+					} else {
+						System.out.println("본인이 작성한 글이 아닙니다.");
+						continue OUT;
+					}
+
 				}
 
+				// 글 수정 완료시
+				return;
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("글번호만 입력해 주세요.");
+				sc = new Scanner(System.in);
+				continue;
 			}
 
-			return;
-		}
+		} // while - end
+
 	}
 
 	// 영화목록에서의 내 리뷰와 타유저 리뷰와 구별하기위한 메소드
@@ -420,31 +602,44 @@ public class Main {
 		OUT: while (true) {
 
 			System.out.println("삭제할 리뷰의 글번호를 입력하세요");
-			int geulno = sc.nextInt();
-			sc.nextLine();
 
-			// geulno에 부합하는 nickname이 들어있는 list
-			List<ReviewVo> list = ReviewDao.getInstance().selectList_UserOnly(geulno);
-			for (ReviewVo a : list) {
-				if (nickname.equals(a.getNickname())) {
-					 
-					int res = ReviewDao.getInstance().delete_review(geulno);
-					System.out.println("리뷰가 삭제됐습니다.");
-					break;
-					
-				} else {
-					System.out.println("본인이 작성한 글이 아닙니다.");
-					continue OUT;
-				}
+			try {
 
+				int geulno = sc.nextInt();
+				sc.nextLine();
+
+				// geulno에 부합하는 nickname이 들어있는 list
+				List<ReviewVo> list = ReviewDao.getInstance().selectList_UserOnly(geulno);
+				for (ReviewVo a : list) {
+					if (nickname.equals(a.getNickname())) {
+
+						int res = ReviewDao.getInstance().delete_review(geulno);
+						System.out.println("리뷰가 삭제됐습니다.");
+						break;
+
+					} else {
+						System.out.println("본인이 작성한 글이 아닙니다.");
+						continue OUT;
+					}
+
+				} // for 문 끝
+
+				// 글 삭제 완료시
+				break;
+
+			} catch (Exception e) {
+				System.out.println("숫자만 입력해주세요.");
+				sc = new Scanner(System.in);
+				continue;
+				// TODO: handle exception
 			}
-			break;
-		}
+
+		} // while end
 
 	}
 
 	// 무비 리스트 조회하기
-	private static void review_disp(int movieNo) {
+	private static void review_disp(String title) {
 		// TODO Auto-generated method stub
 
 		while (true) {
@@ -463,20 +658,14 @@ public class Main {
 			System.out.println(
 					"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
 
-			// System.out.printf(" %04d | %13s | %21s | %6s | %11s |\n", idx, m[0], m[1],
-			// m[2], m[3]);
-			// System.out.println(
-			// "- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - -
-			// + - - - - - - - +");
-
-			// 인자로 받은 무비넘버와 같은 리뷰 레코드 조회하기
-			String movieTitle = MovieDao.getInstance().selectMovieTitle(movieNo);
+			// 인자로 받은 영화제목(title)과 같은 리뷰 레코드 조회하기
+			// String title2 = ReviewDao.getInstance().selectList(title);
 
 			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
-			select_review_list = ReviewDao.getInstance().selectList(movieTitle);
+			select_review_list = ReviewDao.getInstance().selectList(title);
 
 			for (ReviewVo vo : select_review_list) {
-				System.out.printf("   %04d | %13s     | %21s         | %6s   | %11s   |\n", vo.getGeulno(),
+				System.out.printf("   %04d | %13s     | %21s         | %10s   | %13s   |\n", vo.getGeulno(),
 						vo.getTitle(), vo.getGeultext(), vo.getNickname(), vo.getGeulDate().substring(0, 10));
 				System.out.println(
 						"- - - - + - - - - - - - - - + - - - - - - - - - - - - - - - - - + - - - - - + - - - - - - - +");
@@ -485,25 +674,39 @@ public class Main {
 
 			System.out.println("1.글쓰기\n2.수정\n3.삭제\n4.내가 쓴글 확인\n5.이전 화면으로..");
 
-			int choice = sc.nextInt();
-			sc.nextLine();
+			try {
 
-			switch (choice) {
-			case 1:
-				write_review();
-				break;
-			case 2:
-				update_onlymine();
-				break;
-			case 3:
-				delete_onlymine();
-				break;
-			case 4:
-				review_disp_user();
-				break;
-			case 5:
-				return;
+				int choice = sc.nextInt();
+				sc.nextLine();
 
+				if (choice >= 6) {
+					System.out.println("잘못 입력하였습니다.");
+					continue;
+				}
+
+				switch (choice) {
+				case 1:
+					write_review();
+					break;
+				case 2:
+					update_onlymine();
+					break;
+				case 3:
+					delete_onlymine();
+					break;
+				case 4:
+					review_disp_user();
+					break;
+				case 5:
+					return;
+
+				}
+
+			} catch (Exception e) {
+				// TODO: handle exception
+				System.out.println("잘못 입력하였습니다.");
+				sc = new Scanner(System.in);
+				continue;
 			}
 
 		} // 출력화면 while - end
@@ -526,7 +729,7 @@ public class Main {
 
 		geulDate = now.format(formatter);
 
-		System.out.print("작성을 원하는 영화 제목을 입력하세요 >> ");
+		System.out.println("작성을 원하는 영화 제목을 입력하세요 >> ");
 		title = sc.nextLine();
 		// System.out.println(title);
 		movieNo = MovieDao.getInstance().selectMovieNo(title);

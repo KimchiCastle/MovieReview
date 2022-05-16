@@ -7,8 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import service.movieService;
-import vo.MovieVo;
+import Vo.CategoryVo;
+import Vo.MovieVo;
+import dbService.movieService;
 
 public class MovieDao {
 	//single-ton : 객체 1개만 생성해서 사용하자
@@ -199,4 +200,132 @@ public class MovieDao {
 
 		return list;
 	}
+	
+	//동적으로 영화 카테고리 읽어오기
+	public List<CategoryVo> select_Category_List() {
+
+		List<CategoryVo> list = new ArrayList<CategoryVo>();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from category";
+
+		try {
+			//1.connection 얻어오기
+			//				 커낵션 객체생성, DB에게 커낵션얻기
+			conn = movieService.getInstance().getConnection();
+
+			//2.PreparedStatement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+
+			//3.ResultSet 얻어오기
+
+			rs = pstmt.executeQuery();
+
+			//4.포장(record -> Vo -> list)
+
+			while (rs.next()) {
+				//rs가 가리키는 행(레코드)의 값을 읽어온다.
+
+				//Vo로 포장
+				CategoryVo vo = new CategoryVo();
+				vo.setCateno(rs.getInt("cateno"));
+				vo.setCatename(rs.getString("catename"));
+				
+				//list에 추가
+
+				list.add(vo);
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				//연결(생성) 되었으면 닫아라.(생성 역순으로 닫기)
+				if (rs != null)
+					rs.close(); // 3
+				if (pstmt != null)
+					pstmt.close(); // 2
+				if (conn != null)
+					conn.close(); // 1
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+	
+	//오버로드, 카테고리 영화 출력
+	public List<MovieVo> selectList(int cateno) {
+
+		List<MovieVo> list = new ArrayList<MovieVo>();
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select movieidx, title from category_view where cateno = ?";
+
+		try {
+			//1.connection 얻어오기
+			//				 커낵션 객체생성, DB에게 커낵션얻기
+			conn = movieService.getInstance().getConnection();
+
+			//2.PreparedStatement 얻어오기
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cateno);
+			
+			//3.ResultSet 얻어오기
+
+			rs = pstmt.executeQuery();
+
+			//4.포장(record -> Vo -> list)
+
+			while (rs.next()) {
+				//rs가 가리키는 행(레코드)의 값을 읽어온다.
+
+				//Vo로 포장
+				MovieVo vo = new MovieVo();
+				vo.setMovieidx(rs.getInt("movieidx"));
+				vo.setTitle(rs.getString("title"));
+				//list에 추가
+
+				list.add(vo);
+
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+
+			try {
+				//연결(생성) 되었으면 닫아라.(생성 역순으로 닫기)
+				if (rs != null)
+					rs.close(); // 3
+				if (pstmt != null)
+					pstmt.close(); // 2
+				if (conn != null)
+					conn.close(); // 1
+
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+	}
+	
+
+	
+	
+	
+	
 }

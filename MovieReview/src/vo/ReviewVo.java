@@ -1,4 +1,4 @@
-package vo;
+package Vo;
 
 public class ReviewVo {
 	
@@ -37,6 +37,11 @@ public class ReviewVo {
 		this.geulDate = geulDate;
 	}
 	
+	public ReviewVo(String nickname) {
+		super();
+		this.nickname = nickname;
+	}
+
 	public ReviewVo() {
 		
 	}

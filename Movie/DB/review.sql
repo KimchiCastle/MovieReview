@@ -34,4 +34,27 @@ insert into review values( (select nvl(max(geulno)+1,1) from review) , 10, 'À¹ Ç
 insert into review values( (select nvl(max(geulno)+1,1) from review) , 20, 'µ·¾Æ±î¿ö¼­ º½', 'kimchi12', '2022-05-13' );  
 insert into review values( (select nvl(max(geulno)+1,1) from review) , 21, 'Á¹·Á¼­ Àá', 'gogo0325', '2022-05-12' );   
 
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 2,  '°¡ÀÔÇß¾î¿ä^^', 'id1', '2022-05-11' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 3,  'Á¸Àë..', 'my123', '2022-05-09' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 4, '5Á¡¸¸Á¡¿¡ 6Á¡ µå¸³´Ï´Ù',  'bonglove', '2022-05-27' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 6, 'Àç¹Õ´Âµ¥ Á¹¾ÒÀ½..?', 'kimchi12', '2022-05-13' );  
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 7,  'Àç¹Ì¾ú³×¿ä', 'gogo0325', '2022-05-12' );  
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 1,  '¾ÆµéÀÌ¶û °°ÀÌ ºÃ¾î¿ä', 'id1', '2022-05-11' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 8,  '¹è¿ìÁø ¹«¾ù..', 'my123', '2022-05-09' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 9, 'º¸´Ù°¡ ÆËÄÜ³¯¸²;',  'bonglove', '2022-05-27' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 11, '3È¸Â÷ÀÔ´Ï´Ù', 'kimchi12', '2022-05-13' );  
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 12, '°¨µ¶ÆÒµÆ³×¿ä', 'gogo0325', '2022-05-12' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 13,  '¼¼»óÀÇÀÌÄ¡¿Í¸Â¹°·È´Ù.', 'id1', '2022-05-11' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 15,  '´Ã¾îÁö´Â¾ÀÀÌÁ»ÀÖ¾úÀ½', 'my123', '2022-05-09' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 16, '¿ÍÀ½ÇâÁ¶¸í¹«¾ù',  'bonglove', '2022-05-27' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 17, 'ÁøÂ¥ºñ½Ñ¿µÈ­´Ù', 'kimchi12', '2022-05-13' );  
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 18, 'ÇÑ¹øºÁ¼±¾ÈµÉ¿µÈ­', 'gogo0325', '2022-05-12' );   
+insert into review values( (select nvl(max(geulno)+1,1) from review) , 19, '´Ù¸¥¿µÈ­°¡Ä¿ÇÇ¶ó¸éÀÌ¿µÈ­´Âtop', 'gogo0325', '2022-05-12' );   
+geulno int,
+	movieidx int,
+	geultext varchar2(100),
+	userid varchar2(100),
+	geuldate date 
+
+selcet * from movie
 

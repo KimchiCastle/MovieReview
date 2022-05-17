@@ -151,21 +151,63 @@ public class Main {
 	}
 
 	private static void login() {
-		System.out.println("               [로그인]");
-		System.out.println();
+		
 		// 조회하기 위해 Dao객체 생성
-		list = LoginDao.getInstance().selectList();
+		//list = LoginDao.getInstance().selectList();
 
-		for (int i = 0; i < 5; i++) {
+		for (int i = 1; i <= 5; i++) {
 
+			System.out.println("               [로그인]");
+			System.out.println();
+			
+			
 			System.out.print("아이디 : ");
 			String id_check = sc.nextLine();
 
-			System.out.print("비밀번호 : ");
-			String pwd_check = sc.nextLine();
+			LoginVo vo = LoginDao.getInstance().selectOneFromID(id_check);
 
-			System.out.println();
+			if (vo == null) {
+				System.out.println("\n존재하지 않는 아이디입니다.");
+				
+				
+				System.out.printf("\n %d회 로그인에 실패하였습니다.\n",i);
+				continue ;
+			}
+			
+			
+			int count = 0;
+			while (count<5) {
+				
+				System.out.print("비밀번호 : ");
+				String pwd_check = sc.nextLine();
 
+				if (!pwd_check.equals(vo.getPassword())) {
+					System.out.println("비밀번호가 틀리셨습니다. ");
+					
+					count++;
+					System.out.printf("비밀번호 입력 실패 %d회!! \n",count);
+					
+					
+					
+					continue;
+				}
+				
+				//회원 가입 됐으면
+				nickname = vo.getNickname();
+				ID = vo.getUserid();
+				
+				System.out.printf("%s 님 환영합니다!! \n", nickname);
+				
+				main_main1_1_disp();
+
+				
+				// 메인종료되면 리턴해서 호출한 곳으로
+				return;
+			}
+
+			
+			
+			
 //			  아이디 비번 닉네임 
 //			  'id1'      '123123'   '박평식의5점' 
 //			  'my123',   '1q2w3e4r' '우주명작7광구'
@@ -173,41 +215,48 @@ public class Main {
 //			  'kimchi12' 'kimchi12' 'kimchi12' 
 //			  'gogo0325' '123123'   '영화학살자'
 
-			for (LoginVo a : list) {
-				// 아이디 체크
-				if (id_check.equals(a.getUserid())) {
-					// 비번체크
-					if (pwd_check.equals(a.getPassword())) {
-						System.out.println("\n로그인 완료...!!");
-						System.out.println();
-
-						nickname = a.getNickname();
-						ID = a.getUserid();
-
-						System.out.printf("%s 님 환영합니다!! \n", nickname);
-
-						main_main1_1_disp();
-
-						// 메인종료되면 리턴해서 호출한 곳으로
-						return;
-
-					}
-
-				} // id if - end;
-
-			} // 회원 check 종료
-
-			System.out.printf("로그인 실패 %d회!! \n", i + 1);
-			System.out.println();
-
-			if ((i + 1 == 5)) {
-				System.out.println();
-				System.out.println();
-				System.out.println("로그인에 실패하였습니다.");
-				System.out.println();
-				System.out.println();
-				System.out.println();
-			}
+			
+			
+			
+			
+			
+			
+			
+//			for (LoginVo a : list) {
+//				// 아이디 체크
+//				if (id_check.equals(a.getUserid())) {
+//					// 비번체크
+//					if (pwd_check.equals(a.getPassword())) {
+//						System.out.println("\n로그인 완료...!!");
+//						System.out.println();
+//
+//						nickname = a.getNickname();
+//						ID = a.getUserid();
+//
+//						System.out.printf("%s 님 환영합니다!! \n", nickname);
+//
+//						main_main1_1_disp();
+//
+//						// 메인종료되면 리턴해서 호출한 곳으로
+//						return;
+//
+//					}
+//
+//				} // id if - end;
+//
+//			} // 회원 check 종료
+//
+//			System.out.printf("로그인 실패 %d회!! \n", i + 1);
+//			System.out.println();
+//
+//			if ((i + 1 == 5)) {
+//				System.out.println();
+//				System.out.println();
+//				System.out.println("로그인에 실패하였습니다.");
+//				System.out.println();
+//				System.out.println();
+//				System.out.println();
+//			}
 
 		} // 로그인 for end;
 

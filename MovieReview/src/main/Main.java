@@ -690,7 +690,7 @@ public class Main {
 					"+ - - - - + - - - - - - - - - - - + - - - - - - - - - - - - - - - - - - - - - - -+ - - - - - - - + - - - - - - -+");
 
 			List<ReviewVo> select_review_list = new ArrayList<ReviewVo>();
-			select_review_list = ReviewDao.getInstance().selectList_UserOnly(nickname);
+			select_review_list = ReviewDao.getInstance().selectList(title);
 
 
 			for (ReviewVo vo : select_review_list) {
